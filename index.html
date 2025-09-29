@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Advanced Music Player</title>
+  <title>Hindi & Punjabi Music Player</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,125 +10,215 @@
       color: #fff;
       margin: 0;
       padding: 0;
-      text-align: center;
     }
     header {
-      background: #1f1f1f;
+      background: #1db954;
       padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header img {
+      width: 40px;
+      height: 40px;
     }
     header input {
       padding: 8px;
-      width: 60%;
-      border-radius: 6px;
+      width: 200px;
+      border-radius: 5px;
       border: none;
     }
     .player {
       margin: 30px auto;
       padding: 20px;
       background: #1e1e1e;
-      border-radius: 12px;
-      width: 350px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.7);
-    }
-    .playlist {
-      margin-top: 20px;
-      max-height: 200px;
-      overflow-y: auto;
-      text-align: left;
-    }
-    .song {
-      padding: 8px;
-      cursor: pointer;
-      border-bottom: 1px solid #333;
-    }
-    .song:hover {
-      background: #333;
+      border-radius: 15px;
+      width: 400px;
+      box-shadow: 0 0 15px #000;
+      text-align: center;
     }
     audio {
-      width: 100%;
-      margin-top: 10px;
+      display: none;
     }
-    .controls {
-      margin-top: 10px;
-    }
-    button {
-      padding: 8px 12px;
-      margin: 5px;
+    .controls button {
+      background: #2c2c2c;
       border: none;
+      color: white;
+      padding: 10px;
+      margin: 5px;
       border-radius: 5px;
       cursor: pointer;
-      background: #444;
-      color: #fff;
     }
-    button:hover {
-      background: #666;
+    .controls button:hover {
+      background: #1db954;
+      color: black;
+    }
+    .progress {
+      width: 100%;
+      height: 8px;
+      background: #444;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 15px 0;
+      position: relative;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #1db954;
+      border-radius: 5px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 15px 0 0 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    li {
+      padding: 8px;
+      margin: 5px 0;
+      background: #2c2c2c;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    li.active {
+      background: #1db954;
+      color: black;
     }
   </style>
 </head>
 <body>
 
+  <!-- Header -->
   <header>
-    <h2>🎶 Online Music Player</h2>
-    <input type="text" id="searchBar" placeholder="Search songs..." onkeyup="filterSongs()">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <img src="https://cdn-icons-png.flaticon.com/512/727/727218.png" alt="Music Logo">
+      <h2>Hindi & Punjabi Music</h2>
+    </div>
+    <input type="text" id="search" placeholder="Search song...">
   </header>
 
+  <!-- Music Player -->
   <div class="player">
-    <h3 id="currentSong">Select a song...</h3>
-    <audio id="audioPlayer" controls>
-      <source id="audioSource" src="" type="audio/mpeg">
-      Your browser does not support the audio element.
+    <audio id="audioPlayer">
+      <source id="audioSource" src="https://example.com/song1.mp3" type="audio/mpeg">
     </audio>
 
+    <!-- Controls -->
     <div class="controls">
-      <button onclick="prevSong()">⏮ Prev</button>
-      <button onclick="nextSong()">⏭ Next</button>
+      <button onclick="prevSong()">⏮️</button>
+      <button onclick="togglePlay()">▶️/⏸️</button>
+      <button onclick="nextSong()">⏭️</button>
+      <button onclick="toggleShuffle()">🔀</button>
+      <button onclick="toggleRepeat()">🔁</button>
+      <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
     </div>
 
-    <div class="playlist" id="playlist">
-      <div class="song" onclick="playSong('song1.mp3')">Song 1</div>
-      <div class="song" onclick="playSong('song2.mp3')">Song 2</div>
-      <div class="song" onclick="playSong('song3.mp3')">Song 3</div>
+    <!-- Progress Bar -->
+    <div class="progress" onclick="seek(event)">
+      <div class="progress-bar" id="progressBar"></div>
     </div>
+
+    <!-- Playlist -->
+    <ul id="playlist">
+      <!-- Replace MP3 links with your songs -->
+      <li onclick="playSong('https://example.com/hindi_song1.mp3', this)">Arijit Singh – Tum Hi Ho</li>
+      <li onclick="playSong('https://example.com/hindi_song2.mp3', this)">Shreya Ghoshal – Sun Raha Hai</li>
+      <li onclick="playSong('https://example.com/punjabi_song1.mp3', this)">Diljit Dosanjh – Do You Know</li>
+      <li onclick="playSong('https://example.com/punjabi_song2.mp3', this)">Guru Randhawa – Lahore</li>
+      <li onclick="playSong('https://example.com/punjabi_song3.mp3', this)">Sidhu Moose Wala – 295</li>
+    </ul>
   </div>
 
   <script>
-    const songs = ["song1.mp3", "song2.mp3", "song3.mp3"];
+    let player = document.getElementById("audioPlayer");
+    let source = document.getElementById("audioSource");
+    let playlist = document.getElementById("playlist").getElementsByTagName("li");
+    let progressBar = document.getElementById("progressBar");
     let currentIndex = 0;
+    let isShuffle = false;
+    let isRepeat = false;
 
-    const audioPlayer = document.getElementById("audioPlayer");
-    const audioSource = document.getElementById("audioSource");
-    const currentSong = document.getElementById("currentSong");
+    function playSong(song, element) {
+      source.src = song;
+      player.load();
+      player.play();
+      for (let item of playlist) item.classList.remove("active");
+      element.classList.add("active");
+      currentIndex = Array.from(playlist).indexOf(element);
+    }
 
-    function playSong(song) {
-      currentIndex = songs.indexOf(song);
-      audioSource.src = song;
-      currentSong.textContent = "Now Playing: " + song;
-      audioPlayer.load();
-      audioPlayer.play();
+    function togglePlay() {
+      if (player.paused) player.play();
+      else player.pause();
     }
 
     function nextSong() {
-      currentIndex = (currentIndex + 1) % songs.length;
-      playSong(songs[currentIndex]);
+      if (isShuffle) {
+        currentIndex = Math.floor(Math.random() * playlist.length);
+      } else {
+        currentIndex++;
+        if (currentIndex >= playlist.length) currentIndex = 0;
+      }
+      playlist[currentIndex].click();
     }
 
     function prevSong() {
-      currentIndex = (currentIndex - 1 + songs.length) % songs.length;
-      playSong(songs[currentIndex]);
+      currentIndex--;
+      if (currentIndex < 0) currentIndex = playlist.length - 1;
+      playlist[currentIndex].click();
     }
 
-    // Auto play next when song ends
-    audioPlayer.addEventListener("ended", nextSong);
+    function toggleShuffle() {
+      isShuffle = !isShuffle;
+      alert("Shuffle " + (isShuffle ? "On" : "Off"));
+    }
 
-    // Search filter
-    function filterSongs() {
-      let input = document.getElementById("searchBar").value.toLowerCase();
-      let items = document.getElementsByClassName("song");
-      for (let i = 0; i < items.length; i++) {
-        let text = items[i].textContent.toLowerCase();
-        items[i].style.display = text.includes(input) ? "" : "none";
+    function toggleRepeat() {
+      isRepeat = !isRepeat;
+      alert("Repeat " + (isRepeat ? "On" : "Off"));
+    }
+
+    // Auto Next or Repeat
+    player.addEventListener("ended", function() {
+      if (isRepeat) {
+        player.currentTime = 0;
+        player.play();
+      } else {
+        nextSong();
       }
+    });
+
+    // Update Progress
+    player.addEventListener("timeupdate", function() {
+      let percent = (player.currentTime / player.duration) * 100;
+      progressBar.style.width = percent + "%";
+    });
+
+    function seek(event) {
+      let rect = event.target.getBoundingClientRect();
+      let offsetX = event.clientX - rect.left;
+      let percent = offsetX / rect.width;
+      player.currentTime = percent * player.duration;
     }
+
+    // Volume Control
+    document.getElementById("volume").addEventListener("input", function() {
+      player.volume = this.value;
+    });
+
+    // Search
+    document.getElementById("search").addEventListener("keyup", function() {
+      let filter = this.value.toLowerCase();
+      for (let item of playlist) {
+        let text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? "" : "none";
+      }
+    });
+
+    // Highlight first song
+    playlist[0].classList.add("active");
   </script>
 
 </body>
