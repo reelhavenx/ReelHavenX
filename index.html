@@ -3,280 +3,196 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movie Hub - Reel Haven X</title>
+  <title>Reel Haven X</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
     body {
+      margin: 0;
+      font-family: Arial, sans-serif;
       background-color: #000;
       color: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
-
-    /* Hero Banner */
     header {
-      position: relative;
-      height: 60vh;
-      background: url('https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      background: #111;
+      padding: 15px;
       text-align: center;
-      color: #fff;
     }
-
-    header::after {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-    }
-
     header h1 {
-      position: relative;
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      z-index: 1;
+      margin: 0;
+      font-size: 28px;
+      color: #f1c40f;
     }
-
     .search-bar {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: rgba(34, 34, 34, 0.85);
-      border-radius: 25px;
-      padding: 5px 10px;
-      max-width: 500px;
-      width: 80%;
-      z-index: 1;
+      margin: 15px auto;
+      text-align: center;
     }
-
     .search-bar input {
-      background: none;
+      width: 60%;
+      padding: 10px;
+      border-radius: 25px;
       border: none;
       outline: none;
-      color: #fff;
-      flex: 1;
-      padding: 10px;
-      font-size: 1em;
+      font-size: 16px;
     }
-
-    .search-bar button {
-      background: #ffcc00;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .search-bar button:hover {
-      background: #ffaa00;
-    }
-
-    /* Categories */
-    .categories {
+    nav {
       text-align: center;
-      padding: 40px 20px;
-      background: #111;
+      margin: 20px 0;
     }
-
-    .categories h2 {
-      margin-bottom: 20px;
-      font-size: 1.8em;
-    }
-
-    .dropdown {
-      position: relative;
+    nav details {
+      margin: 10px;
       display: inline-block;
-    }
-
-    .dropbtn {
-      background: #ffcc00;
-      color: #000;
-      padding: 12px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
       background: #222;
-      min-width: 180px;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-      border-radius: 5px;
-      margin-top: 5px;
-      z-index: 1;
-    }
-
-    .dropdown-content a {
-      color: #fff;
       padding: 10px 15px;
-      text-decoration: none;
-      display: block;
+      border-radius: 8px;
+      cursor: pointer;
     }
-
-    .dropdown-content a:hover {
-      background: #444;
-      color: #ffcc00;
+    nav summary {
+      font-size: 18px;
+      font-weight: bold;
+      outline: none;
     }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
+    nav details[open] {
+      background: #333;
     }
-
-    /* Movie Grid */
-    .movies {
-      padding: 40px 20px;
-      background: #000;
-    }
-
-    .movies h2 {
-      margin-bottom: 20px;
-      font-size: 1.8em;
-      text-align: center;
-    }
-
+    /* Movie grid */
     .movie-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 20px;
+      padding: 20px;
     }
-
     .movie-card {
       background: #111;
       border-radius: 10px;
-      overflow: hidden;
-      transition: transform 0.3s;
-      cursor: pointer;
+      text-align: center;
+      padding: 10px;
     }
-
     .movie-card img {
       width: 100%;
-      height: 220px;
+      height: 300px; /* portrait mode */
+      border-radius: 10px;
       object-fit: cover;
-      display: block;
     }
-
-    .movie-card:hover {
-      transform: scale(1.05);
+    .movie-card h3 {
+      margin: 10px 0;
+      font-size: 16px;
+      color: #f1c40f;
     }
-
-    .movie-card p {
-      padding: 10px;
-      text-align: center;
-      font-size: 0.9em;
+    .movie-card button {
+      margin: 5px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
     }
-
-    /* Contact */
+    .download-btn {
+      background: #f1c40f;
+      color: #000;
+    }
+    .share-btn {
+      background: #3498db;
+      color: #fff;
+    }
     footer {
       background: #111;
-      padding: 30px 20px;
       text-align: center;
-      margin-top: auto;
+      padding: 20px;
+      margin-top: 40px;
     }
-
     footer h2 {
-      margin-bottom: 15px;
+      margin-bottom: 10px;
+      color: #f1c40f;
     }
-
     footer input, footer textarea {
-      width: 100%;
-      max-width: 400px;
-      margin: 10px auto;
+      width: 70%;
       padding: 10px;
+      margin: 8px 0;
       border: none;
       border-radius: 5px;
-      display: block;
     }
-
     footer button {
-      background: #ffcc00;
-      border: none;
       padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
+      border: none;
+      background: #f1c40f;
+      color: #000;
       font-weight: bold;
-      margin-top: 10px;
+      cursor: pointer;
+      border-radius: 5px;
     }
-
-    footer button:hover {
-      background: #ffaa00;
-    }
-
   </style>
 </head>
 <body>
 
-  <!-- Hero Banner -->
   <header>
     <h1>🎬 Reel Haven X</h1>
-    <div class="search-bar">
-      <input type="text" placeholder="Search movies, series...">
-      <button>Go</button>
-    </div>
   </header>
 
-  <!-- Categories Section -->
-  <section class="categories">
-    <h2>Categories</h2>
-    <div class="dropdown">
-      <button class="dropbtn">Select Category ▾</button>
-      <div class="dropdown-content">
-        <a href="#">Bollywood</a>
-        <a href="#">Hollywood</a>
-        <a href="#">Tones</a>
-        <a href="#">Web Series</a>
-      </div>
-    </div>
-  </section>
+  <div class="search-bar">
+    <input type="text" placeholder="Search movies, web series, tones...">
+  </div>
 
-  <!-- Movie Grid -->
-  <section class="movies">
-    <h2>Featured Movies</h2>
-    <div class="movie-grid">
-      <div class="movie-card">
-        <img src="https://m.media-amazon.com/images/I/81G8J4r3g+L._AC_SY679_.jpg" alt="Movie 1">
-        <p>Movie Title 1</p>
-      </div>
-      <div class="movie-card">
-        <img src="https://m.media-amazon.com/images/I/91KkWf50SoL._AC_SY679_.jpg" alt="Movie 2">
-        <p>Movie Title 2</p>
-      </div>
-      <div class="movie-card">
-        <img src="https://m.media-amazon.com/images/I/81p+xe8cbnL._AC_SY679_.jpg" alt="Movie 3">
-        <p>Movie Title 3</p>
-      </div>
-      <div class="movie-card">
-        <img src="https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg" alt="Movie 4">
-        <p>Movie Title 4</p>
-      </div>
-    </div>
-  </section>
+  <nav>
+    <details open>
+      <summary>Bollywood</summary>
+      <div class="movie-grid">
+        <!-- Movie Card 1 -->
+        <div class="movie-card">
+          <img src="https://upload.wikimedia.org/wikipedia/en/6/6e/Pathaan_film_poster.jpg" alt="Pathaan">
+          <h3>Pathaan</h3>
+          <button class="download-btn">⬇ Download</button>
+          <button class="share-btn">🔗 Share</button>
+        </div>
 
-  <!-- Footer / Contact -->
+        <!-- Movie Card 2 -->
+        <div class="movie-card">
+          <img src="https://upload.wikimedia.org/wikipedia/en/8/88/KGF_Chapter_2.jpg" alt="KGF 2">
+          <h3>KGF 2</h3>
+          <button class="download-btn">⬇ Download</button>
+          <button class="share-btn">🔗 Share</button>
+        </div>
+
+        <!-- Movie Card 3 -->
+        <div class="movie-card">
+          <img src="https://upload.wikimedia.org/wikipedia/en/b/bd/Gadar_2_poster.jpg" alt="Gadar 2">
+          <h3>Gadar 2</h3>
+          <button class="download-btn">⬇ Download</button>
+          <button class="share-btn">🔗 Share</button>
+        </div>
+
+        <!-- Movie Card 4 -->
+        <div class="movie-card">
+          <img src="https://upload.wikimedia.org/wikipedia/en/3/3f/Brahmastra_poster.jpg" alt="Brahmastra">
+          <h3>Brahmastra</h3>
+          <button class="download-btn">⬇ Download</button>
+          <button class="share-btn">🔗 Share</button>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Hollywood</summary>
+      <p>Coming Soon...</p>
+    </details>
+
+    <details>
+      <summary>Web Series</summary>
+      <p>Coming Soon...</p>
+    </details>
+
+    <details>
+      <summary>Tones</summary>
+      <p>Coming Soon...</p>
+    </details>
+  </nav>
+
   <footer>
     <h2>Contact Us</h2>
     <form>
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Your Email" required>
-      <textarea rows="4" placeholder="Your Message"></textarea>
-      <button type="submit">Send Message</button>
+      <input type="text" placeholder="Your Name" required><br>
+      <input type="email" placeholder="Your Email" required><br>
+      <textarea rows="4" placeholder="Your Message"></textarea><br>
+      <button type="submit">Send</button>
     </form>
-    <p style="margin-top:15px; font-size:0.9em; color:#aaa;">© 2025 Reel Haven X</p>
   </footer>
 
 </body>
