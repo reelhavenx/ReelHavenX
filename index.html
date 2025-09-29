@@ -223,3 +223,134 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hindi Punjabi Music Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f3f3f3;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #111;
+      color: white;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+    }
+    header img {
+      width: 35px;
+      margin-right: 10px;
+    }
+    #searchBox {
+      padding: 8px;
+      width: 200px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #player {
+      margin: 20px auto;
+    }
+    #playlist {
+      list-style: none;
+      padding: 0;
+      max-width: 500px;
+      margin: 20px auto;
+    }
+    #playlist li {
+      padding: 10px;
+      background: #fff;
+      border: 1px solid #ddd;
+      margin-bottom: 5px;
+      cursor: pointer;
+      text-align: left;
+    }
+    #playlist li:hover {
+      background: #e3e3e3;
+    }
+    #playlist li.active {
+      background: #cce5ff;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><img src="https://cdn-icons-png.flaticon.com/512/727/727245.png" alt="Logo"> Hindi Punjabi Player</h1>
+    <input type="text" id="searchBox" placeholder="Search songs..." onkeyup="searchSongs()">
+  </header>
+
+  <div id="player">
+    <audio id="audioPlayer" controls autoplay>
+      <source src="" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <ul id="playlist">
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/03/15/audio_3e9d57f3b1.mp3?filename=hindi-instrumental.mp3', this)">
+      🎶 Hindi Instrumental Melody
+    </li>
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2023/04/05/audio_89b1e91d7f.mp3?filename=punjabi-bhangra.mp3', this)">
+      🥁 Punjabi Bhangra Beat
+    </li>
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/10/30/audio_4a2af7c2d1.mp3?filename=bollywood-style.mp3', this)">
+      🎤 Bollywood Style Tune
+    </li>
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2023/01/10/audio_02d3845c6b.mp3?filename=punjabi-dhol.mp3', this)">
+      🪘 Punjabi Dhol Mix
+    </li>
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/06/28/audio_c0530f0e20.mp3?filename=indian-classical.mp3', this)">
+      🎼 Indian Classical Vibe
+    </li>
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/02/25/audio_8a3e0c4693.mp3?filename=romantic-hindi.mp3', this)">
+      💕 Hindi Romantic Instrumental
+    </li>
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2023/05/22/audio_5b0f16fda2.mp3?filename=punjabi-pop.mp3', this)">
+      🎧 Punjabi Pop Beat
+    </li>
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2021/12/06/audio_0f5d38fd2f.mp3?filename=happy-hindi.mp3', this)">
+      😀 Happy Hindi Tune
+    </li>
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2023/03/10/audio_7c1c7db40f.mp3?filename=punjabi-dance.mp3', this)">
+      💃 Punjabi Dance Song
+    </li>
+    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/04/09/audio_b4a8cbbfc6.mp3?filename=bollywood-background.mp3', this)">
+      🎬 Bollywood Background Track
+    </li>
+  </ul>
+
+  <script>
+    const audioPlayer = document.getElementById("audioPlayer");
+    const playlistItems = document.querySelectorAll("#playlist li");
+
+    function playSong(songUrl, element) {
+      audioPlayer.src = songUrl;
+      audioPlayer.play();
+
+      playlistItems.forEach(item => item.classList.remove("active"));
+      element.classList.add("active");
+    }
+
+    function searchSongs() {
+      let input = document.getElementById("searchBox").value.toLowerCase();
+      playlistItems.forEach(song => {
+        song.style.display = song.innerText.toLowerCase().includes(input) ? "" : "none";
+      });
+    }
+  </script>
+
+</body>
+</html>
