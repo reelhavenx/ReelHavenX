@@ -1,356 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <title>Hindi & Punjabi Music Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Real Haven - Music Player</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #1db954;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header img {
-      width: 40px;
-      height: 40px;
-    }
-    header input {
-      padding: 8px;
-      width: 200px;
-      border-radius: 5px;
-      border: none;
-    }
-    .player {
-      margin: 30px auto;
-      padding: 20px;
-      background: #1e1e1e;
-      border-radius: 15px;
-      width: 400px;
-      box-shadow: 0 0 15px #000;
-      text-align: center;
-    }
-    audio {
-      display: none;
-    }
-    .controls button {
-      background: #2c2c2c;
-      border: none;
-      color: white;
-      padding: 10px;
-      margin: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .controls button:hover {
-      background: #1db954;
-      color: black;
-    }
-    .progress {
-      width: 100%;
-      height: 8px;
-      background: #444;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 15px 0;
-      position: relative;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #1db954;
-      border-radius: 5px;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 15px 0 0 0;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-    li {
-      padding: 8px;
-      margin: 5px 0;
-      background: #2c2c2c;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    li.active {
-      background: #1db954;
-      color: black;
-    }
+    body { background: #111; color: #fff; font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+    h1 { text-align: center; color: gold; }
+    .search { max-width: 400px; margin: 20px auto; }
+    .search input { width: 100%; padding: 10px; border-radius: 6px; border: none; }
+    .player { background: #222; padding: 20px; border-radius: 12px; text-align: center; }
+    .controls { margin-top: 10px; }
+    button { margin: 5px; padding: 10px 15px; border: none; border-radius: 6px; background: #444; color: #fff; cursor: pointer; }
+    button:hover { background: #666; }
+    #playlist { margin-top: 20px; list-style: none; padding: 0; max-width: 400px; margin-left: auto; margin-right: auto; }
+    #playlist li { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; }
+    #playlist li.playing { background-color: #444; }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <div style="display:flex; align-items:center; gap:10px;">
-      <img src="https://cdn-icons-png.flaticon.com/512/727/727218.png" alt="Music Logo">
-      <h2>Hindi & Punjabi Music</h2>
-    </div>
-    <input type="text" id="search" placeholder="Search song...">
-  </header>
+  <h1>🎵 Real Haven Music</h1>
 
-  <!-- Music Player -->
+  <div class="search">
+    <input type="text" id="search" placeholder="गाना खोजें...">
+  </div>
+
   <div class="player">
-    <audio id="audioPlayer">
-      <source id="audioSource" src="https://example.com/song1.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- Controls -->
+    <h2 id="title">कोई गाना चुनें</h2>
+    <audio id="audio" controls preload="metadata"></audio>
     <div class="controls">
-      <button onclick="prevSong()">⏮️</button>
-      <button onclick="togglePlay()">▶️/⏸️</button>
-      <button onclick="nextSong()">⏭️</button>
-      <button onclick="toggleShuffle()">🔀</button>
-      <button onclick="toggleRepeat()">🔁</button>
-      <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+      <button id="prev">⏮️ पिछला</button>
+      <button id="play">▶️ प्ले</button>
+      <button id="next">⏭️ अगला</button>
     </div>
-
-    <!-- Progress Bar -->
-    <div class="progress" onclick="seek(event)">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-
-    <!-- Playlist -->
-    <ul id="playlist">
-      <!-- Replace MP3 links with your songs -->
-      <li onclick="playSong('https://example.com/hindi_song1.mp3', this)">Arijit Singh – Tum Hi Ho</li>
-      <li onclick="playSong('https://example.com/hindi_song2.mp3', this)">Shreya Ghoshal – Sun Raha Hai</li>
-      <li onclick="playSong('https://example.com/punjabi_song1.mp3', this)">Diljit Dosanjh – Do You Know</li>
-      <li onclick="playSong('https://example.com/punjabi_song2.mp3', this)">Guru Randhawa – Lahore</li>
-      <li onclick="playSong('https://example.com/punjabi_song3.mp3', this)">Sidhu Moose Wala – 295</li>
-    </ul>
   </div>
 
-  <script>
-    let player = document.getElementById("audioPlayer");
-    let source = document.getElementById("audioSource");
-    let playlist = document.getElementById("playlist").getElementsByTagName("li");
-    let progressBar = document.getElementById("progressBar");
-    let currentIndex = 0;
-    let isShuffle = false;
-    let isRepeat = false;
+  <ul id="playlist"></ul>
 
-    function playSong(song, element) {
-      source.src = song;
-      player.load();
-      player.play();
-      for (let item of playlist) item.classList.remove("active");
-      element.classList.add("active");
-      currentIndex = Array.from(playlist).indexOf(element);
-    }
+<script>
+// 🎧 कुछ real (royalty-free / public domain / sample) MP3 लिंक उदाहरण के लिए:
+const songs = [
+  {
+    title: "Sample Song 1 (Instrumental Hindi)",
+    url: "https://cdn.pixabay.com/download/audio/2022/11/08/audio_0bc9e8a1b3.mp3?filename=india-emotional-melody-110889.mp3"
+  },
+  {
+    title: "Sample Song 2 (Hindi Instrumental)",
+    url: "https://cdn.pixabay.com/download/audio/2023/01/15/audio_fefc2456ae.mp3?filename=indian-emotional-melody-124573.mp3"
+  },
+  {
+    title: "Sample Song 3 (Royalty-free Hindi)",
+    url: "https://cdn.pixabay.com/download/audio/2021/10/16/audio_7cfa9ab08c.mp3?filename=indian-music-66944.mp3"
+  }
+];
 
-    function togglePlay() {
-      if (player.paused) player.play();
-      else player.pause();
-    }
+const audio = document.getElementById("audio");
+const title = document.getElementById("title");
+const playBtn = document.getElementById("play");
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+const playlist = document.getElementById("playlist");
+const search = document.getElementById("search");
 
-    function nextSong() {
-      if (isShuffle) {
-        currentIndex = Math.floor(Math.random() * playlist.length);
-      } else {
-        currentIndex++;
-        if (currentIndex >= playlist.length) currentIndex = 0;
-      }
-      playlist[currentIndex].click();
-    }
+let currentIndex = 0;
 
-    function prevSong() {
-      currentIndex--;
-      if (currentIndex < 0) currentIndex = playlist.length - 1;
-      playlist[currentIndex].click();
-    }
+function loadSong(index) {
+  currentIndex = index;
+  audio.src = songs[index].url;
+  title.textContent = songs[index].title;
+  highlightPlaying();
+}
 
-    function toggleShuffle() {
-      isShuffle = !isShuffle;
-      alert("Shuffle " + (isShuffle ? "On" : "Off"));
-    }
+function playSong() {
+  audio.play();
+  playBtn.textContent = "⏸️ पॉज़";
+}
+function pauseSong() {
+  audio.pause();
+  playBtn.textContent = "▶️ प्ले";
+}
 
-    function toggleRepeat() {
-      isRepeat = !isRepeat;
-      alert("Repeat " + (isRepeat ? "On" : "Off"));
-    }
+playBtn.addEventListener("click", () => {
+  if (audio.paused) {
+    playSong();
+  } else {
+    pauseSong();
+  }
+});
 
-    // Auto Next or Repeat
-    player.addEventListener("ended", function() {
-      if (isRepeat) {
-        player.currentTime = 0;
-        player.play();
-      } else {
-        nextSong();
-      }
+prevBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex - 1 + songs.length) % songs.length;
+  loadSong(currentIndex);
+  playSong();
+});
+
+nextBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex + 1) % songs.length;
+  loadSong(currentIndex);
+  playSong();
+});
+
+audio.addEventListener("ended", () => {
+  // जब एक गाना खत्म हो जाए, अगला शुरू कर देना
+  currentIndex = (currentIndex + 1) % songs.length;
+  loadSong(currentIndex);
+  playSong();
+});
+
+function renderPlaylist(filter = "") {
+  playlist.innerHTML = "";
+  songs
+    .map((s, i) => ({ ...s, i }))
+    .filter(s => s.title.toLowerCase().includes(filter.toLowerCase()))
+    .forEach(song => {
+      const li = document.createElement("li");
+      li.textContent = song.title;
+      li.onclick = () => {
+        loadSong(song.i);
+        playSong();
+      };
+      li.dataset.index = song.i;
+      playlist.appendChild(li);
     });
+  highlightPlaying();
+}
 
-    // Update Progress
-    player.addEventListener("timeupdate", function() {
-      let percent = (player.currentTime / player.duration) * 100;
-      progressBar.style.width = percent + "%";
-    });
-
-    function seek(event) {
-      let rect = event.target.getBoundingClientRect();
-      let offsetX = event.clientX - rect.left;
-      let percent = offsetX / rect.width;
-      player.currentTime = percent * player.duration;
+function highlightPlaying() {
+  Array.from(playlist.children).forEach((li, idx) => {
+    if (Number(li.dataset.index) === currentIndex) {
+      li.classList.add("playing");
+    } else {
+      li.classList.remove("playing");
     }
+  });
+}
 
-    // Volume Control
-    document.getElementById("volume").addEventListener("input", function() {
-      player.volume = this.value;
-    });
+// Search field पर input होने पर playlist filter करना
+search.addEventListener("input", () => {
+  renderPlaylist(search.value);
+});
 
-    // Search
-    document.getElementById("search").addEventListener("keyup", function() {
-      let filter = this.value.toLowerCase();
-      for (let item of playlist) {
-        let text = item.textContent.toLowerCase();
-        item.style.display = text.includes(filter) ? "" : "none";
-      }
-    });
+// जब पेज लोड हो
+renderPlaylist();
+loadSong(0);  // पहली song load लेकिन autoplay नहीं
 
-    // Highlight first song
-    playlist[0].classList.add("active");
-  </script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hindi Punjabi Music Player</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #f3f3f3;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #111;
-      color: white;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header h1 {
-      display: flex;
-      align-items: center;
-      font-size: 22px;
-    }
-    header img {
-      width: 35px;
-      margin-right: 10px;
-    }
-    #searchBox {
-      padding: 8px;
-      width: 200px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    #player {
-      margin: 20px auto;
-    }
-    #playlist {
-      list-style: none;
-      padding: 0;
-      max-width: 500px;
-      margin: 20px auto;
-    }
-    #playlist li {
-      padding: 10px;
-      background: #fff;
-      border: 1px solid #ddd;
-      margin-bottom: 5px;
-      cursor: pointer;
-      text-align: left;
-    }
-    #playlist li:hover {
-      background: #e3e3e3;
-    }
-    #playlist li.active {
-      background: #cce5ff;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1><img src="https://cdn-icons-png.flaticon.com/512/727/727245.png" alt="Logo"> Hindi Punjabi Player</h1>
-    <input type="text" id="searchBox" placeholder="Search songs..." onkeyup="searchSongs()">
-  </header>
-
-  <div id="player">
-    <audio id="audioPlayer" controls autoplay>
-      <source src="" type="audio/mp3">
-      Your browser does not support the audio element.
-    </audio>
-  </div>
-
-  <ul id="playlist">
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/03/15/audio_3e9d57f3b1.mp3?filename=hindi-instrumental.mp3', this)">
-      🎶 Hindi Instrumental Melody
-    </li>
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2023/04/05/audio_89b1e91d7f.mp3?filename=punjabi-bhangra.mp3', this)">
-      🥁 Punjabi Bhangra Beat
-    </li>
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/10/30/audio_4a2af7c2d1.mp3?filename=bollywood-style.mp3', this)">
-      🎤 Bollywood Style Tune
-    </li>
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2023/01/10/audio_02d3845c6b.mp3?filename=punjabi-dhol.mp3', this)">
-      🪘 Punjabi Dhol Mix
-    </li>
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/06/28/audio_c0530f0e20.mp3?filename=indian-classical.mp3', this)">
-      🎼 Indian Classical Vibe
-    </li>
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/02/25/audio_8a3e0c4693.mp3?filename=romantic-hindi.mp3', this)">
-      💕 Hindi Romantic Instrumental
-    </li>
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2023/05/22/audio_5b0f16fda2.mp3?filename=punjabi-pop.mp3', this)">
-      🎧 Punjabi Pop Beat
-    </li>
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2021/12/06/audio_0f5d38fd2f.mp3?filename=happy-hindi.mp3', this)">
-      😀 Happy Hindi Tune
-    </li>
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2023/03/10/audio_7c1c7db40f.mp3?filename=punjabi-dance.mp3', this)">
-      💃 Punjabi Dance Song
-    </li>
-    <li onclick="playSong('https://cdn.pixabay.com/download/audio/2022/04/09/audio_b4a8cbbfc6.mp3?filename=bollywood-background.mp3', this)">
-      🎬 Bollywood Background Track
-    </li>
-  </ul>
-
-  <script>
-    const audioPlayer = document.getElementById("audioPlayer");
-    const playlistItems = document.querySelectorAll("#playlist li");
-
-    function playSong(songUrl, element) {
-      audioPlayer.src = songUrl;
-      audioPlayer.play();
-
-      playlistItems.forEach(item => item.classList.remove("active"));
-      element.classList.add("active");
-    }
-
-    function searchSongs() {
-      let input = document.getElementById("searchBox").value.toLowerCase();
-      playlistItems.forEach(song => {
-        song.style.display = song.innerText.toLowerCase().includes(input) ? "" : "none";
-      });
-    }
-  </script>
-
+</script>
 </body>
 </html>
